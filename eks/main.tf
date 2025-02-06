@@ -22,13 +22,16 @@ resource "aws_iam_role_policy_attachment" "eks_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# Create EKS Cluster
+# Create EKS Cluster with Public Access
 resource "aws_eks_cluster" "this" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    subnet_ids = var.subnet_ids
+    subnet_ids              = var.subnet_ids
+    endpoint_public_access  = var.enable_public_access
+    endpoint_private_access = var.enable_private_access
+    public_access_cidrs     = var.public_access_cidrs
   }
 
   tags = var.tags
